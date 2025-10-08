@@ -1,0 +1,194 @@
+﻿SISTEMAS OPERATIVOS
+
+
+
+
+
+
+
+
+
+
+Juan David Martinez Ortiz
+James Eduardo Garcia Castro
+José Santiago Soles Siza
+Meily Alejandra Pedroza Naranjo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Universidad libre
+Grupo: N.
+
+
+
+
+
+
+Bogotá, Colombia.
+2025.
+
+
+
+
+TALLER
+
+
+Preguntas de comparacion y analisis
+1. ¿Cuál es la diferencia        principal entre        TCP y UDP? Menciona un caso de uso para cada uno. 
+   1. TCP: (Transmission Control Protocol), es un protocolo de red que permite a dispositivos conectados a una red, como Internet, establecer una conexión para intercambiar datos de manera fiable. Su función principal es asegurar que los datos se entreguen completos, en el orden correcto y sin errores, dividiendo los mensajes en paquetes y reensamblándolos en el destino. 
+      1. Diferencias: Es orientado a conexión y garantiza que los datos lleguen completos y en orden. Usa mecanismos de verificación, retransmisión y control de flujo.
+      2. Caso de uso: Navegación web (HTTP/HTTPS), correo electrónico. Se necesita fiabilidad
+
+
+   2. UDP: Significa Protocolo de Datagramas de Usuario (User Datagram Protocol en inglés), un protocolo de la capa de transporte en Internet que permite el envío rápido de datos sin establecer una conexión previa ni garantizar la entrega o el orden. Es ideal para aplicaciones que necesitan baja latencia, como la transmisión de vídeo y audio en tiempo real, y para servicios como el DNS, ya que prioriza la velocidad sobre la fiabilidad.
+      1. Diferencias: Es sin conexión, más rápido pero no garantiza la entrega ni el orden de los paquetes. No tiene verificación ni corrección de errores.
+      2. Caso de uso: Streaming de video en vivo, juegos en línea. Se prioriza la velocidad y baja latencia sobre la fiabilidad.
+
+
+2. ¿Qué ventajas y desventajas tiene usar sockets con hilos (threading) en comparación con procesos (multiprocessing)?
+   1. Sockets con hilos (threading): 
+      1. Ventajas: Comparten el mismo espacio de memoria, lo que facilita la comunicación entre ellos sin necesidad de mecanismos. Crear un hilo es más fácil, esto permite manejar más conexiones simultáneas con menos consumo. En aplicaciones donde las operaciones de entrada y salida dominan, los hilos pueden esperar sin bloquear todo el programa.
+      2. Desventajas: Al compartir memoria se requiere sincronización cuidadosa, lo que lleva a condiciones de carrera o deadlocks. En Python, el Global Interpreter Lock limita la ejecución concurrente de código Python puro, lo que afecta el rendimiento en tareas CPU-intensivas. Los errores relacionados con la concurrencia pueden ser difíciles de reproducir y depurar.
+
+
+   2. Sockets con procesos(Multiprocessing):
+      1. Ventajas: Cada proceso tiene su propio espacio de memoria, lo que reduce el riesgo de errores por acceso concurrente. En Python, multiprocessing evita el GIL, permitiendo paralelismo real en tareas intensivas de CPU. Si un proceso falla, no necesariamente afecta a los demás, lo que mejora la robustez del sistema. 
+      2. Desventajas: Crear procesos es más costoso en términos de memoria y tiempo de arranque. Requiere mecanismos explícitos como pipes, queues o sockets internos para intercambiar datos entre procesos. En sistemas con muchas conexiones simultáneas, el uso de procesos puede volverse ineficiente.
+
+
+3. ¿Por qué es necesario abrir los archivos en modo binario (rb/wb)para la transmisión de        imágenes o archivos PDF?
+   1. Cuándo se transmiten imágenes o archivos PDF en un programa, es fundamental abrirlos en modo binario (rb para leer, wb para escribir). La razón se basa en cómo el sistema operativo y el lenguaje manejan los archivos:
+Diferencia entre modo texto y modo binario:
+   2. Modo texto (r / w): El sistema interpreta el archivo como texto. Puede convertir saltos de línea. Puede intentar interpretar la codificación de caracteres.
+   3. Modo binario (rb / wb): El archivo se maneja como una secuencia cruda de bytes. Ninguna conversión de caracteres ni de saltos de línea. Cada byte se lee o se escribe exactamente igual.
+   4.  Por qué es crítico para imágenes y PDFs
+      1. Imágenes (JPEG, PNG, etc.) y PDFs no son texto, sino estructuras de bytes que codifican gráficos, compresión, metadatos, etc.
+      2. Si se abren en modo texto, los cambios automáticos (por ejemplo convertir \n en \r\n) corrompen los bytes, produciendo archivos dañados o que no se pueden abrir.
+
+
+4. ¿Qué problemas podrían surgir si un servidor de chat no maneja adecuadamente múltiples clientes?
+   1. Bloqueo y falta de respuesta: 
+      1. Si el servidor atiende a cada cliente continuamente, un cliente lento puede detener a todos los demás.
+      2. Una operación de lectura o escritura que se quede esperando puede congelar la atención de todo el chat.
+   2. Pérdida de corrupción de mensajes:
+      1. Sin control de concurrencia (por ejemplo, sin locks o colas seguras), los mensajes de distintos clientes pueden entrelazarse.
+      2. Paquetes que se pisan o se pierden si dos hilos escriben en el mismo socket o archivo de log sin sincronización.
+   3. Errores de conexión:
+      1. Desconexiones inesperadas cuando varios clientes compiten por el mismo recurso.
+      2. Límites de sockets superados si no se cierran correctamente las conexiones inactivas.
+   4. Problemas de rendimiento:
+      1. Alta latencia porque el servidor no reparte bien la carga.
+      2. Uso excesivo de CPU o memoria.
+   5. Riesgos de seguridad: 
+      1. Condiciones de carrera que un atacante puede aprovechar para inyectar datos maliciosos.
+      2. Bastan unos pocos clientes que abran muchas conexiones para dejar fuera de servicio al resto.
+
+
+5. Compara el uso de un servidor de archivos centralizado frente a un esquema peer-to-peer (P2P). ¿En qué escenarios usarías cada uno?
+   1. Servidor de archivos centralizado
+      1. Cómo funciona: Todos los archivos se guardan en un único servidor (NAS, servidor Windows/Linux, nube). Los usuarios acceden a través de red local o Internet.
+   2. Ventajas:
+      1. Control y seguridad: Permite gestionar permisos, respaldos y auditoría de accesos de forma centralizada.
+      2. Disponibilidad y consistencia: Todos los usuarios ven la misma versión de los archivos.
+      3. Escalabilidad y respaldo: Es más sencillo hacer copias de seguridad y ampliar el almacenamiento.
+   3. Desventajas:
+      1. Punto único de falla: Si el servidor cae, nadie accede a los archivos.
+      2. Costo inicial: Hardware/servicio en la nube y mantenimiento.
+   4. Usos recomendados:
+      1. Empresas que necesitan control de versiones, respaldo y acceso simultáneo a documentos críticos.
+      2. Entornos con políticas de seguridad estrictas o cumplimiento normativo.
+      3. Sistemas de gestión documental, proyectos colaborativos grandes.
+   5. Esquema peer-to-peer (P2P)
+      1. Cómo funciona: Cada computadora actúa como cliente y servidor a la vez. Los archivos se comparten directamente entre los nodos, sin un servidor central.
+   6. Ventajas:
+      1. Distribución de carga: El tráfico se reparte entre los nodos.
+      2. Resiliencia: No hay un único punto de falla.
+      3. Menor infraestructura: No requiere un servidor dedicado.
+   7. Desventajas:
+      1. Gestión complicada: Control de permisos, versiones y seguridad más difícil.
+      2. Disponibilidad dependiente de los usuarios: Si los nodos no están en línea, los archivos pueden no estar accesibles.
+      3. Rendimiento variable: Depende de las conexiones y equipos de los pares.
+   8. Usos recomendados:
+      1. Intercambio de archivos grandes en comunidades abiertas (ej. torrents, distribución de software libre).
+      2. Aplicaciones descentralizadas donde no se desea un único dueño de la información.
+      3. Reducción de costos cuando la confiabilidad no es crítica.
+
+
+6. ¿Qué implicaciones de seguridad tiene la transmisión de archivos a través de sockets sin cifrado?
+   1. Intercepción de datos:
+      1. Riesgo: cualquiera con acceso a la red (mismo Wi-Fi, ISP, un atacante enrutando tráfico) puede leer el contenido del archivo mientras viaja.
+      2. Impacto: exposición de información confidencial (documentos, imágenes, claves, datos personales).
+   2. Manipulación o alteración de datos:
+      1. Riesgo: un atacante puede modificar el archivo en tránsito o inyectar contenido malicioso sin que el emisor o el receptor lo noten.
+      2. Impacto: corrupción de archivos, instalación de malware, ejecución de código no deseado.
+   3. Suplantación de identidad
+      1. Riesgo: sin autenticación criptográfica, un atacante puede hacerse pasar por el servidor o por el cliente.
+      2. Impacto: el receptor cree recibir el archivo legítimo cuando en realidad viene de un actor malicioso.
+   4. Falta de integridad verificable
+      1. Riesgo: no hay garantía de que el archivo recibido sea exactamente el enviado.
+      2. Impacto: errores de datos no detectados, fraude en transacciones, problemas legales si se manipulan documentos.
+   5. Recolección de metadatos
+      1. Riesgo: aunque el contenido no parezca sensible, un atacante puede ver quién envía, cuándo, qué tamaño de archivo, revelando patrones de uso o relaciones entre usuarios.
+      2. Impacto: pérdida de privacidad, perfilado de usuarios.
+
+
+7. Explica las diferencias de escalabilidad entre un servidor que maneja un solo cliente y otro que maneja múltiples clientes concurrentes
+   1. Servidor que maneja un solo cliente a la vez
+      1. Funcionamiento: atiende la conexión de un cliente; hasta que no termina, no acepta otra.
+   2. Escalabilidad:
+      1. Muy limitada: solo un cliente activo; los demás esperan o reciben error.
+      2. Si el cliente es lento, bloquea a todos los demás.
+      3. Adecuado solo para pruebas, aplicaciones muy simples o de uso interno.
+   3. Consecuencias
+      1. Baja utilización de hardware: el servidor queda ocioso cuando espera al cliente.
+      2. Crece el tiempo de respuesta linealmente con cada petición extra.
+      3. Riesgo de rechazo de conexiones en picos de demanda.
+
+
+   4. Servidor que maneja múltiples clientes concurrentes
+      1. Funcionamiento: puede atender muchas conexiones en paralelo, usando hilos (threads), procesos o asincronía/eventos.
+   5. Escalabilidad:
+      1. Mucho mayor: la capacidad de atender usuarios depende de los recursos del sistema y de la arquitectura (thread pool, event loop, etc.).
+      2. Puede crecer horizontalmente (más máquinas) o verticalmente (mejor hardware).
+   6. Consecuencias
+      1. Permite miles o millones de usuarios simultáneos (por ejemplo, chats, juegos en línea, servidores web).
+      2. Menor tiempo de espera por usuario.
+      3. Mejor aprovechamiento de CPU y red.
+
+
+8. ¿Qué beneficios aporta el uso de entornos virtuales (virtualenv) en comparación con ejecutar directamente en el sistema global?
+   1. Aislamiento de dependencias
+      1. Cada proyecto tiene su propio directorio de librerías, independiente de los demás.
+      2. Evita conflictos de versiones (por ejemplo, un proyecto necesita Django 3 y otro Django 4).
+   2. Control total y reproducibilidad
+      1. Puedes guardar las dependencias exactas en un archivo como requirements.txt o pyproject.toml.
+      2. Facilita que otros desarrolladores, o un servidor, repliquen el mismo entorno con pip install -r requirements.txt.
+   3. Limpieza y seguridad
+      1. El sistema global permanece intacto, sin llenarse de paquetes que luego no usas.
+      2. Reduce el riesgo de romper aplicaciones del sistema que dependen de una versión específica de una librería.
+   4. Portabilidad y despliegue más sencillo
+      1. Puedes empaquetar o mover el proyecto con su entorno virtual, asegurando que funcione igual en distintos equipos o entornos (desarrollo, pruebas, producción).
+
+
+9. Si tuvieras que optimizar este laboratorio para producción, que mejoras implementadas (por ejemplo,  seguridad,  concurrencia,  manejo de errores)
+
+
+   5. Si este laboratorio fuera a usarse en producción, lo primero sería blindar en términos de seguridad: controlar quién accede, cómo se validan los datos que entran, y asegurarse de que todo viaje está cifrado. También sería clave tener un sistema de roles para que cada usuario solo vea lo que le corresponde. Además, habría que pensar en cómo manejar los errores de forma elegante, sin que el sistema se caiga por completo ante una falla. Que los mensajes sean claros, que se registren los fallos, y que haya mecanismos para recuperarse o al menos entender qué pasó.
+Por otro lado, en producción no basta con que funcione: tiene que escalar. Así que habría que pensar en cómo manejar múltiples usuarios al mismo tiempo, usar procesos en segundo plano para tareas pesadas, y tener monitoreo constante para saber si algo se está saliendo de control. Automatizar pruebas, despliegues y tener alertas proactivas también ayuda a dormir más tranquilo. En resumen, se trata de convertir algo funcional en algo confiable, seguro y preparado para crecer sin romperse.
+10. Reflexiona: ¿En qué se parece este laboratorio a aplicaciones reales como WhatsApp o         Google        Drive, y en qué se diferencia?
+   1. Este laboratorio se parece a aplicaciones como WhatsApp o Google Drive porque también permite interactuar con datos, compartir información, y simular procesos digitales que usamos en la vida cotidiana. Al igual que esas apps, puede incluir funciones como almacenamiento, comunicación entre usuarios, y automatización de tareas, lo que ayuda a entender cómo funcionan las tecnologías detrás de herramientas que usamos todos los días.
+Sin embargo, se diferencia en que su propósito es educativo, no comercial. Está diseñado para aprender, experimentar y entender conceptos, mientras que WhatsApp y Google Drive están pensados para ofrecer servicios eficientes a millones de personas. Además, las aplicaciones reales tienen altos niveles de seguridad, diseño profesional y escalabilidad, mientras que el laboratorio suele ser más simple, controlado y enfocado en el aprendizaje técnico.
